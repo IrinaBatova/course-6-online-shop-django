@@ -26,13 +26,14 @@
 </div>
 
 <div class="container">
-    <!-- Блок вывода сообщения об успешной отправке (доп.задание 4) -->
+    {# Блок вывода сообщения об успешной отправке (доп.задание 4) #}
     {% if success %}
         <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
             <strong>Успешно!</strong> Ваше сообщение отправлено. Данные сохранены.
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     {% endif %}
+
     <!-- Основная сетка страницы (Основной контент) -->
     <div class="row text-start g-4">
         <!-- Левая колонка — Реквизиты компании -->
