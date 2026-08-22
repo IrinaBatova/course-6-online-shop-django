@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <!-- Настройка кодировки для корректного отображения русского текста-->
+    <meta charset="utf-8">
+    <!-- Подстраиваемся под ширину экрана смартфона или планшета-->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Название страницы, пользователь увидит на вкладке браузера в самом верху-->
+    <title>Skystore - Контакты</title>
+    <!-- Подключаем CSS-стили Bootstrap 5 через удаленное CDN-подключение -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+<!-- Верхняя шапка сайта (Header) -->
+<div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
+    <h5 class="my-0 me-md-auto fw-normal">Skystore</h5>
+    <nav class="ms-md-5">
+        <a class="p-2 btn btn-outline-primary" href="/">Каталог</a>
+        <a class="p-2 btn btn-outline-primary" href="/contacts/">Контакты</a>
+    </nav>
+</div>
+<!-- Главный баннер (Jumbotron) -->
+<div class="px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+    <h1 class="display-4">Контакты</h1>
+</div>
+
+<div class="container">
+    {# Блок вывода сообщения об успешной отправке (доп.задание 4) #}
+    {% if success %}
+        <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
+            <strong>Успешно!</strong> Ваше сообщение отправлено. Данные сохранены.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endif %}
+
+    <!-- Основная сетка страницы (Основной контент) -->
+    <div class="row text-start g-4">
+        <!-- Левая колонка — Реквизиты компании -->
+        <div class="col-lg-8 col-md-6 col-sm-12">
+            <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                    <table class="table table-striped align-middle mb-0">
+                        <tr>
+                            <td class="w-25 fw-bold">Страна</td>
+                            <td>USA</td>
+                        </tr>
+                        <tr>
+                            <td class="w-25 fw-bold">ИНН</td>
+                            <td>91-1144442</td>
+                        </tr>
+                        <tr>
+                            <td class="w-25 fw-bold">Адрес</td>
+                            <td>Redmond,WA,98052-6399</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- Правая колонка — Форма обратной связи -->
+        <div class="col-lg-4 col-md-6 col-sm-12">
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header py-3">
+                    <h4 class="my-0 fw-normal">Свяжитесь с нами</h4>
+                </div>
+                <div class="card-body">
+                    <form method="post" action="">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="name" class="form-label text-secondary small fw-bold">Имя</label>
+                            <input type="text" name="name" class="form-control" id="name" placeholder="Ваше имя" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="phone" class="form-label text-secondary small fw-bold">Телефон</label>
+                            <input type="text" name="phone" class="form-control" id="phone" placeholder="Контактный телефон" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="message" class="form-label text-secondary small fw-bold">Сообщение</label>
+                            <textarea name="message" class="form-control" id="message" rows="3" placeholder="Ваше сообщение" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-lg w-100 btn-outline-primary">Отправить</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+<!-- Подвал сайта (Footer) -->
+    <footer class="pt-4 my-md-5 pt-md-5 border-top">
+        <div class="row">
+            <div class="col-12 col-md">
+                SkyStore
+                <small class="d-block mb-3 text-muted">&copy; 2026</small>
+            </div>
+            <div class="col-6 col-md">
+                <h5>Категории</h5>
+                <ul class="list-unstyled text-small">
+                    <li><a class="text-muted text-decoration-none" href="#">Рассылки</a></li>
+                    <li><a class="text-muted text-decoration-none" href="#">Телеграм боты</a></li>
+                    <li><a class="text-muted text-decoration-none" href="#">Полезные утилиты</a></li>
+                    <li><a class="text-muted text-decoration-none" href="#">Веб-приложения</a></li>
+                    <li><a class="text-muted text-decoration-none" href="#">Микросервисы</a></li>
+                </ul>
+            </div>
+            <div class="col-6 col-md">
+                <h5>Дополнительно</h5>
+                <ul class="list-unstyled text-small">
+                    <li><a class="text-muted text-decoration-none" href="#">Мы пишем</a></li>
+                </ul>
+            </div>
+            <div class="col-6 col-md">
+                <h5>О нас</h5>
+                <ul class="list-unstyled text-small">
+                    <li><a class="text-muted text-decoration-none" href="/contacts/">Контакты</a></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+</div>
+
+<!-- Подключаем Bootstrap 5 JS (нужен для работы интерактивных элементов) через удаленное CDN-подключение -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
