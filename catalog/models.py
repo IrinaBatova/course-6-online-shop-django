@@ -45,7 +45,7 @@ class Product(models.Model):
     )
     category = models.ForeignKey(
         Category,
-        on_index=True,
+        # db_index=True,
         on_delete=models.SET_NULL,
         verbose_name="Категория",
         blank=True,
@@ -54,7 +54,7 @@ class Product(models.Model):
         help_text="Выберите категорию товара",
     )
     price = models.DecimalField(
-        max_length=10,
+        max_digits=10,
         decimal_places=2,
         verbose_name="Цена за покупку",
         help_text="Укажите цену товара",
