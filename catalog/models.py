@@ -26,6 +26,7 @@ class Category(models.Model):
 
 
 class Product(models.Model):
+    """Модель товары."""
     objects = models.Manager()
     name = models.CharField(
         max_length=150,
@@ -77,3 +78,18 @@ class Product(models.Model):
 
     def __str__(self):
         return f"{self.name} (Цена: {self.price})"
+
+
+class Contacts(models.Model):
+    """Модель контакты компании."""
+    objects = models.Manager()
+    phone = models.CharField(max_length=50, verbose_name="Телефон")
+    email = models.EmailField(verbose_name="Email")
+    address = models.TextField(verbose_name="Адрес")
+
+    class Meta:
+        verbose_name = "Контакты"
+        verbose_name_plural = "Контакты"
+
+    def __str__(self):
+        return f"Контакты компании (Тел: {self.phone})"
