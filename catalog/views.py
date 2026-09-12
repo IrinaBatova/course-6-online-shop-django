@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from catalog.models import Product, Contacts
 
 
@@ -43,3 +43,17 @@ def contacts(request):
         context['success'] = True
 
     return render(request, 'catalog/contacts.html', context)
+
+def product_detail(request, pk):
+    # Находим товар по его pk (Primary Key).
+    # product = Product.objects.get(pk=pk), но лучше использовать get_object_or_404
+    # Если товара нет, get_object_or_404 вернет ошибку 404 вместо падения сайта.
+    product = get_object_or_404(Product, pk=pk)
+
+    # Формируем контекст для передачи в шаблон (как в лекции)
+    context = {
+        'product': product
+    }
+
+    # Возвращаем ответ с отрендеренным шаблоном
+    return render(request, 'catalog/product_detail.html', context)
