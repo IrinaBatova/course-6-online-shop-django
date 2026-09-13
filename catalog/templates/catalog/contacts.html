@@ -43,15 +43,23 @@
                     <table class="table table-striped align-middle mb-0">
                         <tr>
                             <td class="w-25 fw-bold">Страна</td>
-                            <td>USA</td>
+                            <td>Россия</td>
                         </tr>
                         <tr>
                             <td class="w-25 fw-bold">ИНН</td>
-                            <td>91-1144442</td>
+                            <td>1234567890</td>
                         </tr>
                         <tr>
                             <td class="w-25 fw-bold">Адрес</td>
-                            <td>Redmond,WA,98052-6399</td>
+                            <td>{{ contact_info.address }}</td>
+                        </tr>
+                        <tr>
+                            <td class="w-25 fw-bold">Телефон</td>
+                            <td>{{ contact_info.phone }}</td>
+                        </tr>
+                        <tr>
+                            <td class="w-25 fw-bold">Email</td>
+                            <td>{{ contact_info.email }}</td>
                         </tr>
                     </table>
                 </div>
