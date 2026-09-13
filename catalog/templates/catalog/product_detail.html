@@ -1,22 +1,17 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <title>{{ product.name }}</title>
-</head>
-<body>
-    <!-- Детальная информация о товаре -->
-    <h1>{{ product.name }}</h1>
+{% extends 'catalog/base.html' %}
 
-    <!-- Если у товара загружена картинка, показываем её -->
-    {% if product.image %}
-        <img src="{{ product.image.url }}" alt="{{ product.name }}" style="max-width: 300px;">
-    {% endif %}
+{% block content %}
+<!-- Детальная информация о товаре -->
+<h1>{{ product.name }}</h1>
 
-    <p><strong>Описание:</strong> {{ product.description }}</p>
-    <p><strong>Цена:</strong> {{ product.price }} руб.</p>
+<!-- Если у товара загружена картинка, показываем её -->
+{% if product.image %}
+    <img src="{{ product.image.url }}" alt="{{ product.name }}" style="max-width: 300px;">
+{% endif %}
 
-    <br>
-    <a href="/">Назад к списку товаров</a>
-</body>
-</html>
+<p><strong>Описание:</strong> {{ product.description }}</p>
+<p><strong>Цена:</strong> {{ product.price }} $</p>
+
+<br>
+<a href="/">Назад к списку товаров</a>
+{% endblock %}
