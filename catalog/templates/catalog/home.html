@@ -26,25 +26,44 @@
     <p class="lead">Skystore - это отличный вариант хранения ваших плагинов и примеров кода, который вы бы хотели продать</p>
 </div>
 <!-- Сетка и карточка товара -->
-<div class="container">
+<<div class="container">
     <div class="row text-center justify-content-start">
+        <!-- НАЧАЛО ЦИКЛА -->
+        {% for product in object_list %}
         <div class="col-lg-3 col-md-6 col-sm-12">
-            <div class="card mb-4 shadow-sm">
+            <div class="card mb-4 shadow-sm h-100"> <!-- Добавили h-100, чтобы карточки были одной высоты -->
+
+                <!-- Картинка товара (если она загружена) -->
+                {% if product.image %}
+                    <img src="{{ product.image.url }}" class="card-img-top p-2" alt="{{ product.name }}" style="height: 180px; object-fit: contain;">
+                {% endif %}
+
                 <div class="card-header py-3">
-                    <h4 class="my-0 fw-normal">Удобный сервис рассылок</h4>
+                    <!-- Динамическое название товара -->
+                    <h4 class="my-0 fw-normal">{{ product.name }}</h4>
                 </div>
-                <div class="card-body">
-                    <h1 class="card-title pricing-card-title">$ 140</h1>
-                    <ul class="list-unstyled mt-3 mb-4 text-start ms-3">
-                        <li>- Неограниченная лицензия</li>
-                        <li>- Поддержка</li>
-                        <li>- Установка на сервер</li>
-                        <li>- Получение обновлений</li>
-                    </ul>
-                    <button type="button" class="btn btn-lg w-100 btn-outline-primary">Купить</button>
+
+                <div class="card-body d-flex flex-column justify-content-between">
+                    <div>
+                        <!-- Динамическая цена товара -->
+                        <h1 class="card-title pricing-card-title">{{ product.price }} <small class="text-muted">$</small></h1>
+
+                        <!-- Описание товара, обрезанное до 100 символов -->
+                        <p class="text-start mt-3 mb-4">{{ product.description|truncatechars:100 }}</p>
+                    </div>
+
+                    <!-- Ссылка-кнопка на страницу с подробной информацией о товаре  -->
+                    <a href="{% url 'catalog:product_detail' product.pk %}" class="btn btn-lg w-100 btn-outline-primary">Посмотреть</a>
                 </div>
             </div>
         </div>
+        {% empty %}
+            <!-- Если товаров в базе нет, покажется это сообщение -->
+            <div class="col-12">
+                <p class="alert alert-secondary text-center">Товаров пока нет.</p>
+            </div>
+        {% endfor %}
+        <!-- КОНЕЦ ЦИКЛА -->
     </div>
 <!-- Подвал сайта (<footer>) -->
     <footer class="pt-4 my-md-5 pt-md-5 border-top">

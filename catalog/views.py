@@ -1,14 +1,13 @@
 from django.shortcuts import render, get_object_or_404
 from catalog.models import Product, Contacts
 
-
 # def home(request):
 #     """Контроллер для отображения домашней страницы."""
 #     return render(request, 'catalog/home.html')
 
 def home(request):
     """Контроллер для отображения домашней страницы."""
-    # Выбираем последние 5 созданных продуктов
+    # ЗАПРОС ДЛЯ КОНСОЛИ: Выбираем только последние 5 созданных продуктов
     # Минус перед 'pk' (Primary Key / ID) сортирует от самых новых к старым, а [:5] берет первые 5 штук
     latest_products = Product.objects.all().order_by('-pk')[:5]
 
@@ -18,14 +17,24 @@ def home(request):
         print(f"Товар: {product.name} | Цена: {product.price}")
     print("-----------------------------\n")
 
-    return render(request, template_name='catalog/home.html')
+    # ЗАПРОС ДЛЯ СТРАНИЦЫ: Выбираем ВСЕ товары сортируя их по первичному ключу (pk) в обратном порядке (минус перед
+    # pk означает «по убыванию»). Новые товары будут на первом месте.
+    all_products = Product.objects.all().order_by('-pk')
+
+    # Кладем ВСЕ товары в контекст шаблона
+    context = {
+        'object_list': all_products
+    }
+
+    # Передаем контекст в шаблон
+    return render(request, 'catalog/home.html', context)
 
 def contacts(request):
     """Контроллер для отображения страницы контактов и обработки формы."""
-    # 2. Берем первую созданную запись из базы данных
+    # Берем первую созданную запись из базы данных
     contact_info = Contacts.objects.first()
 
-    # 3. Кладём её в context, чтобы шаблон её увидел
+    # Кладём её в context, чтобы шаблон её увидел
     context = {
         'contact_info': contact_info
     }

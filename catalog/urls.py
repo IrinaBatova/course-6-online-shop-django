@@ -2,7 +2,8 @@ from django.urls import path
 from catalog.apps import CatalogConfig
 from catalog.views import home, contacts, product_detail
 
-appname = CatalogConfig.name
+# appname = CatalogConfig.name
+app_name = 'catalog'
 
 # Маршрутизация (URL-адреса) на уровне приложения "catalog".
 # Связывает конкретные пути с контроллерами (функциями-представлениями) в views.py
