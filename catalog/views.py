@@ -1,5 +1,7 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from catalog.models import Product, Contacts
+from catalog.forms import ProductForm
+from django.core.paginator import Paginator  # Импортируем пагинатор
 
 # def home(request):
 #     """Контроллер для отображения домашней страницы."""
@@ -21,9 +23,19 @@ def home(request):
     # pk означает «по убыванию»). Новые товары будут на первом месте.
     all_products = Product.objects.all().order_by('-pk')
 
+    # Настраиваем пагинатор: разбиваем все товары по 4 штуки на страницу
+    paginator = Paginator(all_products, 4)
+
+    # Получаем номер текущей страницы из URL-адреса (например, ?page=2)
+    page_number = request.GET.get('page')
+
+    # Получаем товары конкретно для этой страницы
+    page_obj = paginator.get_page(page_number)
+
     # Кладем ВСЕ товары в контекст шаблона
     context = {
-        'object_list': all_products
+        # 'object_list': all_products
+        'page_obj': page_obj
     }
 
     # Передаем контекст в шаблон
@@ -59,10 +71,23 @@ def product_detail(request, pk):
     # Если товара нет, get_object_or_404 вернет ошибку 404 вместо падения сайта.
     product = get_object_or_404(Product, pk=pk)
 
-    # Формируем контекст для передачи в шаблон (как в лекции)
+    # Формируем контекст для передачи в шаблон
     context = {
         'product': product
     }
 
     # Возвращаем ответ с отрендеренным шаблоном
     return render(request, 'catalog/product_detail.html', context)
+
+def create_product(request):
+    if request.method == 'POST':
+        # Если пользователь нажал кнопку отправки, передаем текстовые данные и файлы картинок
+        form = ProductForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()  # Django автоматически проверяет поля и создает новый товар в базе
+            return redirect('catalog:home')  # Возвращаем на главную страницу
+    else:
+        # Если страницу только что открыли (GET-запрос) — создаем пустую форму
+        form = ProductForm()
+
+    return render(request, 'catalog/product_form.html', {'form': form})
