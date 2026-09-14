@@ -1,0 +1,17 @@
+{% extends 'catalog/base.html' %}
+
+{% block content %}
+<!-- Детальная информация о товаре -->
+<h1>{{ product.name }}</h1>
+
+<!-- Если у товара загружена картинка, показываем её -->
+{% if product.image %}
+    <img src="{{ product.image.url }}" alt="{{ product.name }}" style="max-width: 300px;">
+{% endif %}
+
+<p><strong>Описание:</strong> {{ product.description }}</p>
+<p><strong>Цена:</strong> {{ product.price }} $</p>
+
+<br>
+<a href="/">Назад к списку товаров</a>
+{% endblock %}

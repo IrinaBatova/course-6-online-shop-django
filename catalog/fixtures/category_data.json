@@ -1,18 +1,19 @@
 [
-{
+  {
     "model": "catalog.category",
     "pk": 1,
     "fields": {
-        "name": "Электроника",
-        "description": "Техника"
+      "name": "Рассылки",
+      "description": "Плагины для автоматических рассылок"
     }
-},
-{
+  },
+  {
     "model": "catalog.category",
     "pk": 2,
     "fields": {
-        "name": "Книги",
-        "description": "Литература"
+      "name": "Телеграм боты",
+      "description": "Готовые шаблоны и скрипты ботов"
     }
-}
+  }
 ]
+
