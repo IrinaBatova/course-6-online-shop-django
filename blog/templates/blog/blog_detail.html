@@ -1,0 +1,28 @@
+{% extends 'catalog/base.html' %}
+{% block content %}
+<div class="container mt-5" style="max-width: 800px;">
+    <div class="card shadow-sm p-4">
+        <h1 class="mb-3">{{ post.title }}</h1>
+        
+        <div class="d-flex text-muted small mb-4 gap-3">
+            <span>📅 {{ post.created_at|date:"d.m.Y H:i" }}</span>
+            <span>👁 Просмотры: {{ post.views_count }}</span>
+        </div>
+
+        {% if post.preview %}
+            <img src="{{ post.preview.url }}" class="img-fluid rounded mb-4" alt="{{ post.title }}" style="max-height: 400px; w-100; object-fit: cover;">
+        {% endif %}
+
+        <div class="blog-content lead text-start" style="white-space: pre-line;">
+            {{ post.content }}
+        </div>
+
+        <div class="mt-5 pt-3 border-top d-flex gap-2">
+            <a href="{% url 'blog:list' %}" class="btn btn-secondary">Назад к статьям</a>
+            <!-- Ссылки на редактирование и удаление -->
+            <a href="{% url 'blog:edit' post.pk %}" class="btn btn-warning">Редактировать</a>
+            <a href="{% url 'blog:delete' post.pk %}" class="btn btn-danger">Удалить</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
