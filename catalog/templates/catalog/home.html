@@ -9,32 +9,46 @@
 <!-- Сетка и карточка товара -->
 <<div class="container">
     <div class="row text-center justify-content-start">
+
         <!-- НАЧАЛО ЦИКЛА -->
-        {% for product in page_obj %}
-        <div class="col-lg-3 col-md-6 col-sm-12">
-            <div class="card mb-4 shadow-sm h-100"> <!-- Добавили h-100, чтобы карточки были одной высоты -->
+        {% for product in products %}
+<!--        <div class="col-lg-3 col-md-6 col-sm-12">-->
+        <div class="col-lg-3 col-md-6 col-sm-12 d-flex">
+            <div class="card mb-4 shadow-sm h-100 w-100 d-flex flex-column"><!-- Добавили h-100, чтобы карточки были одной высоты -->
 
                 <!-- Картинка товара (если она загружена) -->
                 {% if product.image %}
                     <img src="{{ product.image.url }}" class="card-img-top p-2" alt="{{ product.name }}" style="height: 180px; object-fit: contain;">
+                {% else %}
+                    <!-- Заглушка, если картинки нет -->
+                    <div class="card-img-top p-2 d-flex align-items-center justify-content-center bg-light" style="height: 180px;">
+                        <span class="text-muted small">Нет фото</span>
+                    </div>
                 {% endif %}
 
-                <div class="card-header py-3">
+                <!-- Фиксированная шапка (чтобы заголовки в 1 и 2 строки не двигали блоки) -->
+                <div class="card-header py-3 d-flex align-items-center justify-content-center" style="height: 80px; overflow: hidden;">
                     <!-- Динамическое название товара -->
-                    <h4 class="my-0 fw-normal">{{ product.name }}</h4>
+                    <h4 class="my-0 fw-normal text-center">{{ product.name }}</h4>
                 </div>
 
-                <div class="card-body d-flex flex-column justify-content-between">
+                <!-- Тело карточки -->
+                <div class="card-body d-flex flex-column flex-grow-1">
                     <div>
-                        <!-- Динамическая цена товара -->
-                        <h1 class="card-title pricing-card-title">{{ product.price }} <small class="text-muted">$</small></h1>
-
                         <!-- Описание товара, обрезанное до 100 символов -->
-                        <p class="text-start mt-3 mb-4">{{ product.description|truncatechars:100 }}</p>
+                        <p class="card-text flex-grow-1 text-secondary text-start">
+                            {{ product.description|truncatechars:100 }}
+                        </p>
                     </div>
 
-                    <!-- Ссылка-кнопка на страницу с подробной информацией о товаре  -->
-                    <a href="{% url 'catalog:product_detail' product.pk %}" class="btn btn-lg w-100 btn-outline-primary">Посмотреть</a>
+                    <div class="mt-auto pt-3 border-top">
+                        <!-- Динамическая цена товара -->
+                        <h1 class="card-title pricing-card-title mb-3">
+                            {{ product.price }} <small class="text-muted">$</small>
+                        </h1>
+                        <!-- Ссылка-кнопка на страницу с подробной информацией о товаре  -->
+                        <a href="{% url 'catalog:product_detail' product.pk %}" class="w-100 btn btn-lg btn-outline-primary">Посмотреть</a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -56,7 +70,6 @@
                     <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Назад</a>
                 </li>
             {% else %}
-                <!-- Если страницы назад нет, кнопка становится серой (неактивной) -->
                 <li class="page-item disabled"><span class="page-link">Назад</span></li>
             {% endif %}
 
@@ -71,7 +84,6 @@
                     <a class="page-link" href="?page={{ page_obj.next_page_number }}">Вперед</a>
                 </li>
             {% else %}
-                <!-- Если страницы вперед нет, кнопка становится серой -->
                 <li class="page-item disabled"><span class="page-link">Вперед</span></li>
             {% endif %}
 

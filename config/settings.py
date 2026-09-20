@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'catalog',
+    'blog',
 ]
 
 MIDDLEWARE = [
@@ -138,3 +139,11 @@ MAILERS = {
         'BACKEND': 'django.core.mail.backends.console.EmailBackend',
     },
 }
+DEFAULT_FROM_EMAIL = 'robot@myblog.com'
+
+# Путь к папке на компьютере, куда будут сохраняться загруженные файлы
+MEDIA_ROOT = (BASE_DIR/ 'media')
+
+# URL-адрес, по которому картинки будут доступны в браузере
+MEDIA_URL = '/media/'
+

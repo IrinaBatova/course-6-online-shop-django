@@ -1,0 +1,39 @@
+{% extends 'catalog/base.html' %}
+{% block content %}
+<div class="container mt-5" style="max-width: 600px;">
+    <div class="card shadow-sm p-4">
+        <h2 class="text-center mb-4">Создать новую запись</h2>
+        
+        <!-- enctype="multipart/form-data" обязательно нужен для загрузки картинок-превью -->
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <!-- Выводим поля формы в стиле Bootstrap -->
+            {% for field in form %}
+                <div class="mb-3">
+                    <label class="form-label fw-bold">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.errors %}
+                        <div class="text-danger small">{{ field.errors }}</div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+            
+            <div class="d-flex justify-content-between mt-4">
+                <button type="submit" class="btn btn-success px-4">Сохранить</button>
+                <a href="{% url 'blog:list' %}" class="btn btn-secondary px-4">Отмена</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Скрипт, который автоматически добавит Bootstrap-классы к полям Django-формы -->
+<script>
+    document.querySelectorAll('input[type="text"], textarea').forEach(el => {
+        el.classList.add('form-control');
+    });
+    document.querySelectorAll('input[type="checkbox"]').forEach(el => {
+        el.classList.add('form-check-input');
+    });
+</script>
+{% endblock %}
