@@ -68,3 +68,16 @@ class ProductForm(forms.ModelForm):
                 raise ValidationError(f'В описании нельзя использовать слово "{word}".')
 
         return cleaned_data
+
+    def clean_price(self):
+        """Кастомный метод-обработчик, для кастомной проверки (валидации) поля price"""
+
+        # В self.cleaned_data попадают только те поля, которые успешно прошли все базовые (N: соответствие типа
+        # данных) проверки методом is_valid(), который Django вызывает у формы автоматически под капотом внутри
+        # CBV-контроллеров CreateView или UpdateView.
+        cleaned_data = self.cleaned_data.get('price')
+
+        if cleaned_data < 0:
+            raise ValidationError(f'Цена не может быть отрицательной "{cleaned_data}".')
+
+        return cleaned_data
