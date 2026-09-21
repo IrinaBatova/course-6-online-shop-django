@@ -3,7 +3,9 @@
 {% block content %}
 <div class="container mt-5" style="max-width: 600px;">
     <div class="card shadow-sm p-4">
-        <h2 class="mb-4 text-center fw-bold">Добавление товара</h2>
+<!--        <h2 class="mb-4 text-center fw-bold">Добавление товара</h2>-->
+        <h1>{% if object %}Редактирование{% else %}Добавление{% endif %} товара</h1>
+
         
         <!-- Обязательно указываем enctype для работы с загрузкой файлов/картинок -->
         <form method="post" enctype="multipart/form-data">

@@ -2,9 +2,9 @@ from django.shortcuts import render, get_object_or_404, redirect
 from catalog.models import Product, Contacts
 from catalog.forms import ProductForm
 # from django.core.paginator import Paginator  # Импортируем пагинатор
-from django.views.generic import ListView, DetailView, CreateView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView
 from django.views import View
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 
 
 class ProductListView(ListView):
@@ -79,6 +79,17 @@ class ProductCreateView(CreateView):
     model = Product
     form_class = ProductForm
     template_name = 'catalog/product_form.html'
-
     # Указываем, куда перенаправить пользователя после успешного создания товара
     success_url = reverse_lazy('catalog:home')
+
+class ProductUpdateView(UpdateView):
+    """Контроллер для отображения страницы редактирования товара"""
+    model = Product
+    form_class = ProductForm
+    template_name = 'catalog/product_form.html'
+    # Указываем, куда перенаправить пользователя после успешного редактирования товара
+    # success_url = reverse_lazy('catalog:product_detail')
+
+    def get_success_url(self):
+        # Динамически перенаправляем на детальную страницу только что отредактированного товара
+        return reverse('catalog:product_detail', kwargs={'pk': self.object.pk})

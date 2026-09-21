@@ -1,6 +1,6 @@
 from django.urls import path
 # from catalog.apps import CatalogConfig
-from catalog.views import ProductListView, ContactsView, ProductDetailView, ProductCreateView
+from catalog.views import ProductListView, ContactsView, ProductDetailView, ProductCreateView, ProductUpdateView
 
 # appname = CatalogConfig.name
 app_name = 'catalog'
@@ -15,6 +15,8 @@ urlpatterns = [
     path('contacts/', ContactsView.as_view(), name='contacts'),
     # Динамический маршрут (страница с подробной информацией о товаре)
     path('product/<int:pk>/', ProductDetailView.as_view(), name='product_detail'),
-    # Статический маршрут (страница для добавления новых товаров)
+    # Статический маршрут (страница для добавления нового товара)
     path('product/create/', ProductCreateView.as_view(), name='create_product'),
+    # Динамический маршрут (страница для изменения товара)
+    path('product/edit/<int:pk>/', ProductUpdateView.as_view(), name='update_product'),
 ]
