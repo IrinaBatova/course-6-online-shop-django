@@ -33,3 +33,8 @@ python/
 # --- Файлы окружения с секретными ключами и паролями ---
 .env
 *.env
+
+# --- Локальные файлы bootstrap
+catalog/static/catalog/css/bootstrap.min.css
+catalog/static/catalog/js/bootstrap.bundle.min.js
+/static

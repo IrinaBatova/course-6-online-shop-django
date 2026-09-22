@@ -1,0 +1,29 @@
+{% extends 'catalog/base.html' %}
+
+{% block content %}
+<!-- Детальная информация о товаре -->
+<div class="container mt-5" style="max-width: 600px;">
+    <div class="card shadow-sm p-4">
+        <h2 class="mb-4 text-center fw-bold">{{ product.name }}</h2>
+
+        <!-- Если у товара загружена картинка, показываем её -->
+        {% if product.image %}
+            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="d-block mx-auto" style="max-width: 300px;">
+        {% endif %}
+
+        <p class="mt-4"><strong>Описание:</strong> {{ product.description }}</p>
+        <p><strong>Цена:</strong> {{ product.price }} $</p>
+
+        <!-- Кнопки управления -->
+        <div class="d-flex justify-content-center gap-2 mt-4">
+            <a href="{% url 'catalog:update_product' product.pk %}" class="btn btn-outline-primary" style="width: 210px;">
+                Редактировать товар
+            </a>
+            <a href="/" class="btn btn-outline-primary" style="width: 180px;">
+                Назад к списку
+            </a>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
