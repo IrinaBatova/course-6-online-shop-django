@@ -1,21 +1,22 @@
-from django.conf import settings
-from django.conf.urls.static import static
+"""
+URL configuration for config project.
+
+The `urlpatterns` list routes URLs to views. For more information please see:
+    https://docs.djangoproject.com/en/6.1/topics/http/urls/
+Examples:
+Function views
+    1. Add an import:  from my_app import views
+    2. Add a URL to urlpatterns:  path('', views.home, name='home')
+Class-based views
+    1. Add an import:  from other_app.views import Home
+    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
+Including another URLconf
+    1. Import the include() function: from django.urls import include, path
+    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
+"""
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path
 
-# from catalog.urls import appname
-
-# Маршрутизация (главный диспетчер URL-адресов) на уровне проекта.
-# Связывает URL-адреса с конкретными приложениями или представлениями (views).
 urlpatterns = [
-    # Маршрут для встроенной панели администратора Django
-    path('admin/', admin.site.urls), # admin.site.urls это встроенный в Django набор маршрутов (контроллеров)
-    # Включение URL-адресов приложения catalog в общую структуру проекта
-    path('', include('catalog.urls', namespace='catalog')),
-    # Включение URL-адресов приложения blog в общую структуру проекта
-    path('blog/', include('blog.urls', namespace='blog')),
+    path('admin/', admin.site.urls),
 ]
-
-# Добавляем раздачу медиафайлов в режиме отладки (DEBUG = True)
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
