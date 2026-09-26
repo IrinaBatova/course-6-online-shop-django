@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'catalog',
     'blog',
+    'users',
 ]
 
 MIDDLEWARE = [
@@ -146,4 +147,7 @@ MEDIA_ROOT = (BASE_DIR/ 'media')
 
 # URL-адрес, по которому картинки будут доступны в браузере
 MEDIA_URL = '/media/'
+
+# Переключение с встроенного (базового) User из django.contrib.auth.models на кастомного User в приложении проекта Users
+AUTH_USER_MODEL = 'users.User'
 
