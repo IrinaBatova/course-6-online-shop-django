@@ -173,4 +173,7 @@ AUTH_USER_MODEL = 'users.User'
 # Куда перенаправлять пользователя после успешного входа
 LOGIN_REDIRECT_URL = 'catalog:home'
 
+# Перенаправление для неавторизованных пользователей
+LOGIN_URL = 'users:login'  # Здесь указывается name пути из users/urls.py
+
 
