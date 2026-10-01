@@ -115,7 +115,8 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/6.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+# LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ru-ru'
 
 TIME_ZONE = 'UTC'
 
@@ -134,13 +135,31 @@ STATICFILES_DIRS = (BASE_DIR / 'static',)
 
 # Email
 # https://docs.djangoproject.com/en/6.1/topics/email/#topic-email-configuration
+#
+# MAILERS = {
+#     'default': {
+#         'BACKEND': 'django.core.mail.backends.console.EmailBackend',
+#     },
+# }
+# DEFAULT_FROM_EMAIL = 'robot@myblog.com'
+
+# Email
+# https://docs.djangoproject.com/en/6.1/topics/email/#topic-email-configuration
 
 MAILERS = {
     'default': {
-        'BACKEND': 'django.core.mail.backends.console.EmailBackend',
-    },
+        'BACKEND': 'django.core.mail.backends.smtp.EmailBackend',
+        'OPTIONS': {
+            'host': 'smtp.mail.ru',
+            'port': 465,
+            'use_ssl': True,
+            'username': os.getenv('EMAIL_USER'), # Адрес почтового ящика
+            'password': os.getenv('EMAIL_PASSWORD'), # 16-значный ПАРОЛЬ ПРИЛОЖЕНИЯ без пробелов
+        },
+    }
 }
-DEFAULT_FROM_EMAIL = 'robot@myblog.com'
+
+DEFAULT_FROM_EMAIL = os.getenv('EMAIL_USER') # Должен совпадать с username выше
 
 # Путь к папке на компьютере, куда будут сохраняться загруженные файлы
 MEDIA_ROOT = (BASE_DIR/ 'media')
@@ -150,4 +169,8 @@ MEDIA_URL = '/media/'
 
 # Переключение с встроенного (базового) User из django.contrib.auth.models на кастомного User в приложении проекта Users
 AUTH_USER_MODEL = 'users.User'
+
+# Куда перенаправлять пользователя после успешного входа
+LOGIN_REDIRECT_URL = 'catalog:home'
+
 

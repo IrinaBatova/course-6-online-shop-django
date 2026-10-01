@@ -16,6 +16,8 @@ urlpatterns = [
     path('', include('catalog.urls', namespace='catalog')),
     # Маршруты для приложения 'blog', подключаются URL-адреса страниц приложения blog
     path('blog/', include('blog.urls', namespace='blog')),
+    # Маршруты для приложения 'users', подключаются URL-адреса страниц приложения users
+    path('users/', include('users.urls', namespace='users')),
 ]
 
 # Добавляем раздачу медиафайлов в режиме отладки (DEBUG = True)

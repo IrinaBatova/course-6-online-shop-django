@@ -1,0 +1,51 @@
+{% extends 'catalog/base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="card-title mb-0 text-center">Регистрация на Skystore</h3>
+                </div>
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        {# Вывод полей формы #}
+                        {% for field in form %}
+                            <div class="mb-3">
+                                <label for="{{ field.id_for_label }}" class="form-label font-weight-bold">
+                                    {{field.label}}
+                                </label>
+                                
+                                {# Добавляем Bootstrap-класс для каждого поля ввода #}
+                                {{field}}
+                                
+                                {# Вывод подсказок к полям #}
+                                {% if field.help_text %}
+                                    <div class="form-text text-muted small">{{ field.help_text }}</div>
+                                {% endif %}
+                                
+                                {# Вывод ошибок конкретного поля #}
+                                {% if field.errors %}
+                                    <div class="alert alert-danger p-2 mt-1 small">
+                                        {{ field.errors }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                        
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-success btn-block">Зарегистрироваться</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer text-center text-muted">
+                    Уже есть аккаунт? <a href="{% url 'users:login' %}">Войти</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
