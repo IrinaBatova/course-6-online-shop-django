@@ -1,3 +1,7 @@
+from xmlrpc.client import Boolean
+
+from importlib.metadata.diagnose import inspect
+
 from django import forms
 from django.core.exceptions import ValidationError
 from catalog.models import Product
@@ -36,6 +40,8 @@ class ProductForm(forms.ModelForm):
                 field.widget.attrs.update({'class': 'form-control-file'})
             elif field_name == 'category':
                 field.widget.attrs.update({'class': 'form-select'})
+            elif isinstance(field, forms.BooleanField):
+                field.widget.attrs.update({'class': 'form-check-input'})
             else:
                 field.widget.attrs.update({'class': 'form-control'})
 
@@ -81,3 +87,9 @@ class ProductForm(forms.ModelForm):
             raise ValidationError(f'Цена не может быть отрицательной "{cleaned_data}".')
 
         return cleaned_data
+
+class ProductModeratorForm(ProductForm):
+    """Форма для модераторов"""
+    class Meta(ProductForm.Meta):
+        # Оставляем только те 3 поля, которые разрешено редактировать модератору:
+        fields = ('description', 'category', 'is_published')

@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from catalog.models import Product, Contacts
-from catalog.forms import ProductForm
+from catalog.forms import ProductForm, ProductModeratorForm
 # from django.core.paginator import Paginator  # Импортируем пагинатор
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
 from django.views import View
@@ -15,9 +15,21 @@ class ProductListView(ListView):
     context_object_name = 'products'  # Имя переменной, которая будет использоваться в HTML
     paginate_by = 4  # Пагинация по 4 товара на страницу одной строчкой!
 
+    # Переопределяем стандартные методы
+
     def get_queryset(self):
-        # Переопределяем метод, чтобы товары выводились от новых к старым
-        return Product.objects.all().order_by('-pk')
+        """Отдает на сайт товары с учетом роли пользователя"""
+        user = self.request.user
+
+        # Берем базовый список всех товаров
+        queryset = super().get_queryset()
+
+        # Если это суперпользователь или модератор, отдаем ВСЕ товары
+        if user.is_superuser or user.has_perm('catalog.can_unpublish_product'):
+            return queryset.order_by('-pk')
+
+        # Обычным пользователям показываем только опубликованные, отфильтрованные от новых к старым
+        return queryset.filter(is_published=True).order_by('-pk')
 
     def get_context_data(self, **kwargs):
         # Получаем базовый контекст, который готовит сам Django (сюда входит и пагинация)
@@ -86,10 +98,26 @@ class ProductCreateView(LoginRequiredMixin, CreateView):
 class ProductUpdateView(LoginRequiredMixin, UpdateView):
     """Контроллер для отображения страницы редактирования товара"""
     model = Product
-    form_class = ProductForm
+    # form_class = ProductForm
     template_name = 'catalog/product_form.html'
     # Указываем, куда перенаправить пользователя после успешного редактирования товара
     # success_url = reverse_lazy('catalog:product_detail')
+
+    def get_form_class(self):
+        """Возвращает форму в зависимости от прав пользователя"""
+        user = self.request.user
+
+        # Если это главный админ, сразу отдаем полную форму
+        if user.is_superuser:
+            return ProductForm
+
+        # Проверяем, есть ли у пользователя кастомное право модератора
+        if user.has_perm('catalog.can_unpublish_product'):
+            return ProductModeratorForm
+
+        # Если это обычный пользователь, отдаем стандартную полную форму
+        return ProductForm
+
 
     def get_success_url(self):
         # Динамически перенаправляем на детальную страницу только что отредактированного товара
