@@ -5,6 +5,7 @@ from catalog.forms import ProductForm
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
 from django.views import View
 from django.urls import reverse_lazy, reverse
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 class ProductListView(ListView):
@@ -74,7 +75,7 @@ class ProductDetailView(DetailView):
     context_object_name = 'product'  # Имя переменной, которая будет использоваться в HTML
 
 
-class ProductCreateView(CreateView):
+class ProductCreateView(LoginRequiredMixin, CreateView):
     """Контроллер для отображения страницы создания нового товара"""
     model = Product
     form_class = ProductForm
@@ -82,7 +83,7 @@ class ProductCreateView(CreateView):
     # Указываем, куда перенаправить пользователя после успешного создания товара
     success_url = reverse_lazy('catalog:home')
 
-class ProductUpdateView(UpdateView):
+class ProductUpdateView(LoginRequiredMixin, UpdateView):
     """Контроллер для отображения страницы редактирования товара"""
     model = Product
     form_class = ProductForm

@@ -1,15 +1,12 @@
 from django.urls import path
-# from catalog.apps import CatalogConfig
 from catalog.views import ProductListView, ContactsView, ProductDetailView, ProductCreateView, ProductUpdateView
 
-# appname = CatalogConfig.name
-app_name = 'catalog'
+app_name = 'catalog' # Это имя пространства имен для шаблонов
 
 # Маршрутизация (URL-адреса) на уровне приложения "catalog".
 # Связывает конкретные пути с контроллерами (функциями-представлениями) в views.py
 urlpatterns = [
-    # Статический маршрут (Главная страница каталог)
-    # path('', home, name='home'),
+    # Статический маршрут (Главная страница каталог), открывается сразу по корневому адресу сайта
     path('', ProductListView.as_view(), name='home'),
     # Статический маршрут (страница контакты)
     path('contacts/', ContactsView.as_view(), name='contacts'),
