@@ -93,3 +93,9 @@ class ProductModeratorForm(ProductForm):
     class Meta(ProductForm.Meta):
         # Оставляем только те 3 поля, которые разрешено редактировать модератору:
         fields = ('description', 'category', 'is_published')
+
+class SuperuserProductForm(ProductForm):
+    """Форма, в которой есть все поля для суперпользователя"""
+    class Meta(ProductForm.Meta):
+        model = Product
+        fields = '__all__'

@@ -1,5 +1,7 @@
 from django.db import models
 
+from config import settings
+
 
 class Category(models.Model):
     """Модель категории товаров."""
@@ -82,6 +84,13 @@ class Product(models.Model):
     is_published = models.BooleanField(
         default=False,
         verbose_name = "Признак публикации"
+    )
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        verbose_name="Владелец",
+        blank=True,
+        null=True
     )
 
     # Внутренний класс настраивает параметры самой модели

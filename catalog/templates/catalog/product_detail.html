@@ -16,9 +16,21 @@
 
         <!-- Кнопки управления -->
         <div class="d-flex justify-content-center gap-2 mt-4">
-            <a href="{% url 'catalog:update_product' product.pk %}" class="btn btn-outline-primary" style="width: 210px;">
-                Редактировать товар
-            </a>
+
+            <!-- Кнопка редактирования: видна владельцу, модератору (с его правом) или суперадмину -->
+            {% if user == product.owner or perms.catalog.can_unpublish_product or user.is_superuser %}
+                <a href="{% url 'catalog:update_product' product.pk %}" class="btn btn-outline-primary" style="width: 210px;">
+                    Редактировать товар
+                </a>
+            {% endif %}
+
+            <!-- Кнопка удаления: видна владельцу, модератору (с его правом) или суперадмину -->
+            {% if user == product.owner or perms.catalog.can_unpublish_product or user.is_superuser %}
+                <a href="{% url 'catalog:delete_product' product.pk %}" class="btn btn-outline-danger" style="width: 210px;">
+                    Удалить товар
+                </a>
+            {% endif %}
+
             <a href="/" class="btn btn-outline-primary" style="width: 180px;">
                 Назад к списку
             </a>
