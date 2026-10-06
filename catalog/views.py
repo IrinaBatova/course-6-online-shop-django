@@ -1,15 +1,10 @@
-from itertools import product
-
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render
 from catalog.models import Product, Contacts
 from catalog.forms import ProductForm, ProductModeratorForm, SuperuserProductForm
-# from django.core.paginator import Paginator  # Импортируем пагинатор
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.views import View
 from django.urls import reverse_lazy, reverse
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-
-from users.views import UserRegisterView
 
 
 class ProductListView(ListView):

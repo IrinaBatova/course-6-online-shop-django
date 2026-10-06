@@ -1,7 +1,3 @@
-from xmlrpc.client import Boolean
-
-from importlib.metadata.diagnose import inspect
-
 from django import forms
 from django.core.exceptions import ValidationError
 from catalog.models import Product
