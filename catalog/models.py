@@ -1,9 +1,15 @@
 from django.db import models
 
+from config import settings
+
 
 class Category(models.Model):
     """Модель категории товаров."""
+    # Стандартный менеджер записей, делает запросы к БД, создается автоматически, здесь прописан явно для линтеров
     objects = models.Manager()
+
+    # Объявление полей модели (колонок таблицы 'Category' в БД)
+
     name = models.CharField(
         max_length=100,
         verbose_name="Наименование",
@@ -16,6 +22,7 @@ class Category(models.Model):
         help_text="Введите описание категории",
     )
 
+    # Внутренний класс настраивает параметры самой модели
     class Meta:
         verbose_name = "Категория"
         verbose_name_plural = "Категории"
@@ -26,8 +33,12 @@ class Category(models.Model):
 
 
 class Product(models.Model):
-    """Модель товары."""
+    """Модель товара (продукта)."""
+    # Стандартный менеджер записей, делает запросы к БД, создается автоматически, здесь прописан явно для линтеров
     objects = models.Manager()
+
+    # Объявление полей модели (колонок таблицы 'Product' в БД)
+
     name = models.CharField(
         max_length=150,
         verbose_name="Наименование",
@@ -70,11 +81,27 @@ class Product(models.Model):
         auto_now=True,
         verbose_name="Дата последнего изменения",
     )
+    is_published = models.BooleanField(
+        default=False,
+        verbose_name = "Признак публикации"
+    )
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        verbose_name="Владелец",
+        blank=True,
+        null=True
+    )
 
+    # Внутренний класс настраивает параметры самой модели
     class Meta:
         verbose_name = "Товар"
         verbose_name_plural = "Товары"
         ordering = ["name", "-created_at"]
+        # Добавляем кастомное право:
+        permissions = [
+            ("can_unpublish_product", "Можно отменить публикацию товара")
+        ]
 
     def __str__(self):
         return f"{self.name} (Цена: {self.price})"
@@ -82,11 +109,15 @@ class Product(models.Model):
 
 class Contacts(models.Model):
     """Модель контакты компании."""
+    # Стандартный менеджер записей, делает запросы к БД, создается автоматически, здесь прописан явно для линтеров
     objects = models.Manager()
+
+    # Объявление полей модели (колонок таблицы 'Contacts' в БД)
     phone = models.CharField(max_length=50, verbose_name="Телефон")
     email = models.EmailField(verbose_name="Email")
     address = models.TextField(verbose_name="Адрес")
 
+    # Внутренний класс настраивает параметры самой модели
     class Meta:
         verbose_name = "Контакты"
         verbose_name_plural = "Контакты"

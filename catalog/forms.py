@@ -36,6 +36,8 @@ class ProductForm(forms.ModelForm):
                 field.widget.attrs.update({'class': 'form-control-file'})
             elif field_name == 'category':
                 field.widget.attrs.update({'class': 'form-select'})
+            elif isinstance(field, forms.BooleanField):
+                field.widget.attrs.update({'class': 'form-check-input'})
             else:
                 field.widget.attrs.update({'class': 'form-control'})
 
@@ -81,3 +83,15 @@ class ProductForm(forms.ModelForm):
             raise ValidationError(f'Цена не может быть отрицательной "{cleaned_data}".')
 
         return cleaned_data
+
+class ProductModeratorForm(ProductForm):
+    """Форма для модераторов"""
+    class Meta(ProductForm.Meta):
+        # Оставляем только те 3 поля, которые разрешено редактировать модератору:
+        fields = ('description', 'category', 'is_published')
+
+class SuperuserProductForm(ProductForm):
+    """Форма, в которой есть все поля для суперпользователя"""
+    class Meta(ProductForm.Meta):
+        model = Product
+        fields = '__all__'
