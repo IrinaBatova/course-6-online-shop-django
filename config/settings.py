@@ -176,4 +176,12 @@ LOGIN_REDIRECT_URL = 'catalog:home'
 # Перенаправление для неавторизованных пользователей
 LOGIN_URL = 'users:login'  # Здесь указывается name пути из users/urls.py
 
+# Настройки кеширования
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+        'LOCATION': 'redis://127.0.0.1:6379',
+    }
+}
+
 

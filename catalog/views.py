@@ -1,3 +1,5 @@
+from django.views.decorators.cache import cache_page
+from django.utils.decorators import method_decorator
 from django.shortcuts import render
 from catalog.models import Product, Contacts
 from catalog.forms import ProductForm, ProductModeratorForm, SuperuserProductForm
@@ -79,6 +81,7 @@ class ContactsView(View):
         return render(request, 'catalog/contacts.html', context)
 
 
+@method_decorator(cache_page(60*15), name='dispatch')
 class ProductDetailView(DetailView):
     """ Контроллер для отображения страницы с подробной информацией о товаре."""
     model = Product  # Указываем, из какой модели брать данные
