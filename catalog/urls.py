@@ -1,6 +1,6 @@
 from django.urls import path
 from catalog.views import ProductListView, ContactsView, ProductDetailView, ProductCreateView, ProductUpdateView, \
-    ProductDeleteView
+    ProductDeleteView, CategoryProductsListView
 
 app_name = 'catalog' # Это имя пространства имен для шаблонов
 
@@ -19,4 +19,6 @@ urlpatterns = [
     path('product/edit/<int:pk>/', ProductUpdateView.as_view(), name='update_product'),
     # Динамический маршрут (страница для удаления товара)
     path('product/delete/<int:pk>/', ProductDeleteView.as_view(), name='delete_product'),
+    # Динамический маршрут (страница для списка всех товаров в категории)
+    path('category/<int:pk>/products', CategoryProductsListView.as_view(), name='category_products'),
 ]

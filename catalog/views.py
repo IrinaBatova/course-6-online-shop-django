@@ -1,14 +1,20 @@
+from django.views.decorators.cache import cache_page
+from django.utils.decorators import method_decorator
 from django.shortcuts import render
-from catalog.models import Product, Contacts
+from catalog.models import Product, Contacts, Category
 from catalog.forms import ProductForm, ProductModeratorForm, SuperuserProductForm
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.views import View
 from django.urls import reverse_lazy, reverse
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-
+from catalog.services import get_products_by_category
+from django.shortcuts import get_object_or_404
 
 class ProductListView(ListView):
-    """Контроллер для отображения домашней страницы."""
+    """
+    Контроллер для отображения домашней страницы.
+    Отображает продукты в соответствии с правами доступа.
+    """
     model = Product  # Указываем, из какой модели брать данные
     template_name = 'catalog/home.html'  # Путь к HTML-шаблону страницы
     context_object_name = 'products'  # Имя переменной, которая будет использоваться в HTML
@@ -17,7 +23,7 @@ class ProductListView(ListView):
     # Переопределяем стандартные методы
 
     def get_queryset(self):
-        """Отдает на сайт товары с учетом роли пользователя"""
+        """Отдать на сайт товары с учетом роли пользователя"""
         user = self.request.user
 
         # Берем базовый список всех товаров
@@ -31,6 +37,8 @@ class ProductListView(ListView):
         return queryset.filter(is_published=True).order_by('-pk')
 
     def get_context_data(self, **kwargs):
+        """Возвратить контекст"""
+
         # Получаем базовый контекст, который готовит сам Django (сюда входит и пагинация)
         context = super().get_context_data(**kwargs)
 
@@ -48,10 +56,13 @@ class ProductListView(ListView):
 
 # noinspection PyMethodMayBeStatic
 class ContactsView(View):
-    """Контроллер для отображения страницы контактов и обработки формы."""
+    """
+    Контроллер для отображения страницы контактов и обработки формы.
+    Обрабатывает отправку формы пользователем (POST-запрос)
+    """
 
     def get(self, request):
-        """Метод обрабатывает обычную загрузку страницы контактов (GET-запрос)"""
+        """Загрузить страницы контактов (GET-запрос)"""
         contact_info = Contacts.objects.first()
         context = {
             'contact_info': contact_info
@@ -59,7 +70,7 @@ class ContactsView(View):
         return render(request, 'catalog/contacts.html', context)
 
     def post(self, request):
-        """Метод обрабатывает отправку формы пользователем (POST-запрос)"""
+        """Обработать отправку формы пользователем (POST-запрос)"""
         # 1. Снова берём контакты из базы, чтобы страница не сломалась при перезагрузке
         contact_info = Contacts.objects.first()
 
@@ -79,15 +90,22 @@ class ContactsView(View):
         return render(request, 'catalog/contacts.html', context)
 
 
+@method_decorator(cache_page(60*15), name='dispatch')
 class ProductDetailView(DetailView):
-    """ Контроллер для отображения страницы с подробной информацией о товаре."""
+    """
+    Контроллер для отображения страницы с подробной информацией о продукте.
+    Использует кэширование страницы Redis
+    """
     model = Product  # Указываем, из какой модели брать данные
     template_name = 'catalog/product_detail.html'  # Путь к HTML-шаблону страницы товара
     context_object_name = 'product'  # Имя переменной, которая будет использоваться в HTML
 
 
 class ProductCreateView(LoginRequiredMixin, CreateView):
-    """Контроллер для отображения страницы создания нового товара"""
+    """
+    Контроллер для отображения страницы создания нового продукта.
+    Перенаправляет пользователя на страницу списка всех продуктов.
+    """
     model = Product
     form_class = ProductForm
     template_name = 'catalog/product_form.html'
@@ -100,7 +118,10 @@ class ProductCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 class ProductUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
-    """Контроллер для отображения страницы редактирования товара"""
+    """
+    Контроллер для отображения страницы редактирования товара.
+    Перенаправляет на детальную страницу только что отредактированного товара.
+    """
     model = Product
     # form_class = ProductForm
     template_name = 'catalog/product_form.html'
@@ -108,7 +129,7 @@ class ProductUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     # success_url = reverse_lazy('catalog:product_detail')
 
     def test_func(self):
-        """Проверяет, имеет ли пользователь право редактировать этот товар"""
+        """Проверить, имеет ли пользователь право редактировать этот товар"""
         user = self.request.user
         product = self.get_object()
 
@@ -124,7 +145,7 @@ class ProductUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         return user == product.owner
 
     def get_form_class(self):
-        """Возвращает форму в зависимости от прав пользователя"""
+        """Возвратить форму в зависимости от прав пользователя"""
         user = self.request.user
 
         # Если это главный админ, сразу отдаем полную форму
@@ -143,13 +164,18 @@ class ProductUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         return reverse('catalog:product_detail', kwargs={'pk': self.object.pk})
 
 class ProductDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
-    """Контроллер для удаления товара"""
+    """
+    Контроллер для удаления продукта из каталога.
+    Доступен только авторизованным пользователям с правами модератора.
+    После успешного удаления перенаправляет пользователя на страницу
+    списка всех продуктов.
+    """
     model = Product
     template_name = 'catalog/product_confirm_delete.html'
     success_url = reverse_lazy('catalog:home')
 
     def test_func(self):
-        """Проверяет, имеет ли пользователь право удалить этот товар"""
+        """Проверить, имеет ли пользователь право удалить этот товар"""
         user = self.request.user
         product = self.get_object()
 
@@ -163,3 +189,26 @@ class ProductDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
         # Обычный пользователь может удалить только, если он владелец товара.
         return user == product.owner
+
+class CategoryProductsListView(ListView):
+    """
+    Контроллер для отображения списка продуктов, принадлежащих конкретной категории.
+    Использует низкоуровневое кэширование Redis через сервисный слой
+    для оптимизации запросов к базе данных.
+    """
+    template_name = 'catalog/category_products.html'
+    context_object_name = 'products'
+
+    def get_queryset(self):
+        """Получить список продуктов для текущей категории с использованием кэширования."""
+        # Получаем ID категории из URL-адреса
+        self.category_id = self.kwargs.get('pk') # добавляем self к переменной для доступности во всех методах класса
+        # Вместо прямого обращения к БД вызываем сервисную функцию с кэшем.
+        return get_products_by_category(self.category_id)
+
+    def get_context_data(self, **kwargs):
+        """Добавить объект текущей категории в контекст для отображения в шаблоне."""
+        context = super().get_context_data(**kwargs)
+        # Дополнительно передаем саму категорию, чтобы красиво вывести её имя в заголовке
+        context['category'] = get_object_or_404(Category, pk=self.category_id)
+        return context
